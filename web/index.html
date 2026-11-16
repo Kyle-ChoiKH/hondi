@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>혼디 · 제주빅데이터센터 동행 Agent</title>
+<link rel="stylesheet" href="/web/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="logo" aria-hidden="true">혼</div>
+    <div><b>혼디</b><small>제주빅데이터센터 동행 Agent</small></div>
+  </div>
+  <nav class="purposes" id="purposes" aria-label="이용 목적"></nav>
+  <div class="tools">
+    <span class="chip" id="aiChip" title="AI 상태">AI 확인 중</span>
+    <button class="ghost sm" id="btnOutbound" title="외부 AI로 보낸 글 전부 보기"><i data-i="log"></i>AI 전송 기록 <b id="obCount">0</b>건</button>
+    <button class="ghost sm" id="btnLog" title="이번 세션에서 한 일(값은 남기지 않음)"><i data-i="clock"></i>세션 기록</button>
+    <button class="ghost sm" id="btnHelp" title="사용법과 단축키 (?)"><i data-i="help"></i>도움말</button>
+    <button class="ghost sm" id="btnSettings" title="설정과 설치 점검"><i data-i="gear"></i>설정·점검</button>
+    <button class="danger sm" id="btnEnd" title="불러온 파일·결과·AI 기록 삭제"><i data-i="door"></i>퇴실(세션 삭제)</button>
+  </div>
+</header>
+
+<nav class="stepper" id="stepper" aria-label="진행 단계"></nav>
+<div class="banner hidden" id="banner" role="alert"></div>
+<div class="banner fail hidden" id="offline" role="alert">혼디 서버와 연결이 끊겼습니다. <b>실행.bat</b> 검은 창이 닫혔다면 다시 실행하세요. 연결되면 이 안내는 저절로 사라집니다.</div>
+
+<div class="layout">
+  <aside class="side">
+    <section class="panel" id="p1" data-step="1">
+      <button class="phead" type="button"><span class="num">1</span><span class="ptitle">방문 전 준비</span><small>집·사무실에서</small><i data-i="chev" class="chev"></i></button>
+      <div class="body">
+        <label class="lbl" for="prepQ">무엇을 만드실 건가요?</label>
+        <textarea id="prepQ" rows="2" placeholder="예) 애월읍에 국수집을 내려고 사업계획서를 씁니다"></textarea>
+        <div class="row"><input id="prepArea" placeholder="관심 지역(예: 애월읍)"><button id="btnPrep">받을 데이터 추천</button></div>
+        <div id="prepOut"></div>
+        <details class="sub">
+          <summary>제주데이터허브 공개 데이터 미리보기</summary>
+          <div class="row">
+            <select id="hubKind"><option value="population">읍면동 유동인구</option><option value="bus_station">정류소별 버스 이용</option><option value="weather">일별 기상</option></select>
+            <input id="hubEmd" placeholder="읍면동(선택)">
+          </div>
+          <div class="row"><input id="hubFrom" type="date" aria-label="시작일"><input id="hubTo" type="date" aria-label="종료일"><button id="btnHub">보기</button></div>
+          <div id="hubOut"></div>
+        </details>
+      </div>
+    </section>
+
+    <section class="panel open" id="p2" data-step="2">
+      <button class="phead" type="button"><span class="num">2</span><span class="ptitle">받은 파일</span><small id="p2sum">센터에서</small><i data-i="chev" class="chev"></i></button>
+      <div class="body">
+        <div class="drop" id="drop" tabindex="0" role="button" aria-label="CSV 파일 넣기">
+          <i data-i="upload" class="big"></i>
+          <div>센터에서 내려받은 <b>Results_….csv</b> 파일을<br>여기로 끌어다 놓거나 <u>눌러서 고르세요</u></div>
+          <small>여러 달·여러 데이터를 한꺼번에 넣어도 됩니다</small>
+        </div>
+        <input type="file" id="filePick" accept=".csv" multiple hidden>
+        <div class="row">
+          <button class="ghost sm" id="btnScan"><i data-i="folder"></i>폴더에서 찾기</button>
+          <button class="ghost sm" id="btnDemo"><i data-i="spark"></i>예시 데이터로 체험</button>
+        </div>
+        <div id="uploadOut"></div>
+        <div id="scanOut"></div>
+        <div id="datasets"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p3" data-step="5">
+      <button class="phead" type="button"><span class="num">3</span><span class="ptitle">결과물 · 보고서</span><small id="p3sum"></small><i data-i="chev" class="chev"></i></button>
+      <div class="body">
+        <div id="resultList" class="muted">아직 결과가 없습니다.</div>
+        <div class="row">
+          <input id="repTitle" placeholder="보고서 제목(선택)">
+          <button id="btnReport"><i data-i="file"></i>보고서 만들기</button>
+        </div>
+        <div id="reportOut"></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p4" data-step="5">
+      <button class="phead" type="button"><span class="num">4</span><span class="ptitle">반출 신청서</span><small>퇴실 전</small><i data-i="chev" class="chev"></i></button>
+      <div class="body">
+        <label class="lbl" for="useNote">어디에 쓰나요?</label>
+        <input id="useNote" placeholder="예) 애월읍 국수집 창업 사업계획서">
+        <div class="row"><button id="btnForm"><i data-i="pen"></i>신청서 초안 만들기</button><button class="ghost" id="btnBundle" title="보고서 PDF·그림·점검 메모·신청서 초안을 ZIP 하나로"><i data-i="box"></i>반출 신청 묶음(ZIP)</button></div>
+        <div id="formOut"></div>
+      </div>
+    </section>
+  </aside>
+
+  <main class="main">
+    <section class="focus hidden" id="focus" aria-label="내 관심 조건">
+      <div class="fl"><b>내 관심 조건</b><small>한 번 고르면 질문할 때마다 자동으로 넣어 드려요</small></div>
+      <label><span>지역</span><select id="focusArea" aria-label="관심 지역"></select></label>
+      <label><span>업종</span><select id="focusBiz" aria-label="관심 업종"></select></label>
+      <button class="ghost sm" id="btnExplore" type="button"><i data-i="map"></i>데이터 둘러보기</button>
+    </section>
+    <section id="welcome" class="welcome"></section>
+    <section id="feed" class="thread" aria-live="polite"></section>
+
+    <section class="ask" id="ask">
+      <div class="cards" id="cards" aria-label="질문 카드"></div>
+      <div class="askbox">
+        <textarea id="question" rows="1" placeholder="무엇이 궁금하세요? 예) 애월읍 한식 음식점 손님은 주로 누구이고 언제 오나요?"></textarea>
+        <button id="btnAsk" class="primary" title="Enter로도 보낼 수 있습니다"><i data-i="send"></i>묻기</button>
+      </div>
+      <p class="hint" id="askHint"></p>
+    </section>
+  </main>
+</div>
+
+<footer class="statusbar" id="statusbar"></footer>
+
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true">
+  <div class="sheet"><button class="x" id="modalX" aria-label="닫기">×</button><div id="modalBody"></div></div>
+</div>
+<div class="busy hidden" id="busy"><div class="busybox"><div class="spinner"></div><p id="busyText">처리 중…</p></div></div>
+<div id="toasts" class="toasts" aria-live="polite"></div>
+<script src="/web/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,685 @@
+{
+"source": "행안부 불법광고 노출 차단 키워드 v01 (대회 게시판 공지 2026-11-04 첨부)",
+"keywords": [
+{
+"id": 1,
+"keyword": "성매매",
+"use_yn": "Y"
+},
+{
+"id": 2,
+"keyword": "성매매알선",
+"use_yn": "Y"
+},
+{
+"id": 3,
+"keyword": "유흥알선",
+"use_yn": "Y"
+},
+{
+"id": 4,
+"keyword": "성접대",
+"use_yn": "Y"
+},
+{
+"id": 5,
+"keyword": "유흥업소",
+"use_yn": "Y"
+},
+{
+"id": 6,
+"keyword": "출장안마",
+"use_yn": "Y"
+},
+{
+"id": 7,
+"keyword": "조건만남",
+"use_yn": "Y"
+},
+{
+"id": 8,
+"keyword": "조건미팅",
+"use_yn": "Y"
+},
+{
+"id": 9,
+"keyword": "출장샵",
+"use_yn": "Y"
+},
+{
+"id": 10,
+"keyword": "성인출장",
+"use_yn": "Y"
+},
+{
+"id": 11,
+"keyword": "성인출장안마",
+"use_yn": "Y"
+},
+{
+"id": 12,
+"keyword": "성인마사지",
+"use_yn": "Y"
+},
+{
+"id": 13,
+"keyword": "유흥예약",
+"use_yn": "Y"
+},
+{
+"id": 14,
+"keyword": "불법촬영",
+"use_yn": "Y"
+},
+{
+"id": 15,
+"keyword": "몰카",
+"use_yn": "Y"
+},
+{
+"id": 16,
+"keyword": "리벤지포르노",
+"use_yn": "Y"
+},
+{
+"id": 17,
+"keyword": "불법음란물",
+"use_yn": "Y"
+},
+{
+"id": 18,
+"keyword": "아동음란물",
+"use_yn": "Y"
+},
+{
+"id": 19,
+"keyword": "아동성착취물",
+"use_yn": "Y"
+},
+{
+"id": 20,
+"keyword": "불법영상유포",
+"use_yn": "Y"
+},
+{
+"id": 21,
+"keyword": "성착취물",
+"use_yn": "Y"
+},
+{
+"id": 22,
+"keyword": "불법영상공유",
+"use_yn": "Y"
+},
+{
+"id": 23,
+"keyword": "호빠",
+"use_yn": "Y"
+},
+{
+"id": 24,
+"keyword": "풀싸롱",
+"use_yn": "Y"
+},
+{
+"id": 25,
+"keyword": "룸살롱",
+"use_yn": "Y"
+},
+{
+"id": 26,
+"keyword": "합성영상",
+"use_yn": "Y"
+},
+{
+"id": 27,
+"keyword": "딥페이크",
+"use_yn": "Y"
+},
+{
+"id": 28,
+"keyword": "마약",
+"use_yn": "Y"
+},
+{
+"id": 29,
+"keyword": "불법약물",
+"use_yn": "Y"
+},
+{
+"id": 30,
+"keyword": "마약판매",
+"use_yn": "Y"
+},
+{
+"id": 31,
+"keyword": "마약구매",
+"use_yn": "Y"
+},
+{
+"id": 32,
+"keyword": "마약유통",
+"use_yn": "Y"
+},
+{
+"id": 33,
+"keyword": "마약밀매",
+"use_yn": "Y"
+},
+{
+"id": 34,
+"keyword": "마약운반",
+"use_yn": "Y"
+},
+{
+"id": 35,
+"keyword": "빙두",
+"use_yn": "Y"
+},
+{
+"id": 36,
+"keyword": "떨액",
+"use_yn": "Y"
+},
+{
+"id": 37,
+"keyword": "얼음술",
+"use_yn": "Y"
+},
+{
+"id": 38,
+"keyword": "대마",
+"use_yn": "Y"
+},
+{
+"id": 39,
+"keyword": "대마초",
+"use_yn": "Y"
+},
+{
+"id": 40,
+"keyword": "필로폰",
+"use_yn": "Y"
+},
+{
+"id": 41,
+"keyword": "코카인",
+"use_yn": "Y"
+},
+{
+"id": 42,
+"keyword": "헤로인",
+"use_yn": "Y"
+},
+{
+"id": 43,
+"keyword": "엑스터시",
+"use_yn": "Y"
+},
+{
+"id": 44,
+"keyword": "LSD",
+"use_yn": "Y"
+},
+{
+"id": 45,
+"keyword": "케타민",
+"use_yn": "Y"
+},
+{
+"id": 46,
+"keyword": "환각제",
+"use_yn": "Y"
+},
+{
+"id": 47,
+"keyword": "아이스",
+"use_yn": "Y"
+},
+{
+"id": 48,
+"keyword": "작대기",
+"use_yn": "Y"
+},
+{
+"id": 49,
+"keyword": "얼음",
+"use_yn": "N"
+},
+{
+"id": 50,
+"keyword": "떨",
+"use_yn": "Y"
+},
+{
+"id": 51,
+"keyword": "브액",
+"use_yn": "Y"
+},
+{
+"id": 52,
+"keyword": "케이",
+"use_yn": "Y"
+},
+{
+"id": 53,
+"keyword": "MDMA",
+"use_yn": "Y"
+},
+{
+"id": 54,
+"keyword": "합성마약",
+"use_yn": "Y"
+},
+{
+"id": 55,
+"keyword": "운반",
+"use_yn": "Y"
+},
+{
+"id": 56,
+"keyword": "드랍",
+"use_yn": "Y"
+},
+{
+"id": 57,
+"keyword": "픽업",
+"use_yn": "Y"
+},
+{
+"id": 58,
+"keyword": "불법대출",
+"use_yn": "Y"
+},
+{
+"id": 59,
+"keyword": "사금융",
+"use_yn": "Y"
+},
+{
+"id": 60,
+"keyword": "대포통장",
+"use_yn": "Y"
+},
+{
+"id": 61,
+"keyword": "대포폰",
+"use_yn": "Y"
+},
+{
+"id": 62,
+"keyword": "불법환전",
+"use_yn": "Y"
+},
+{
+"id": 63,
+"keyword": "환치기",
+"use_yn": "Y"
+},
+{
+"id": 64,
+"keyword": "금융사기",
+"use_yn": "Y"
+},
+{
+"id": 65,
+"keyword": "세탁",
+"use_yn": "N"
+},
+{
+"id": 66,
+"keyword": "테더",
+"use_yn": "Y"
+},
+{
+"id": 67,
+"keyword": "코인",
+"use_yn": "Y"
+},
+{
+"id": 68,
+"keyword": "업비트",
+"use_yn": "Y"
+},
+{
+"id": 69,
+"keyword": "알트",
+"use_yn": "Y"
+},
+{
+"id": 70,
+"keyword": "암호화폐",
+"use_yn": "Y"
+},
+{
+"id": 71,
+"keyword": "보이스피싱",
+"use_yn": "Y"
+},
+{
+"id": 72,
+"keyword": "투자사기",
+"use_yn": "Y"
+},
+{
+"id": 73,
+"keyword": "코인사기",
+"use_yn": "Y"
+},
+{
+"id": 74,
+"keyword": "폰지사기",
+"use_yn": "Y"
+},
+{
+"id": 75,
+"keyword": "급전",
+"use_yn": "Y"
+},
+{
+"id": 76,
+"keyword": "즉시대출",
+"use_yn": "Y"
+},
+{
+"id": 77,
+"keyword": "무서류",
+"use_yn": "Y"
+},
+{
+"id": 78,
+"keyword": "수수료선입금",
+"use_yn": "Y"
+},
+{
+"id": 79,
+"keyword": "보장수익",
+"use_yn": "Y"
+},
+{
+"id": 80,
+"keyword": "코인리딩",
+"use_yn": "Y"
+},
+{
+"id": 81,
+"keyword": "고수익방",
+"use_yn": "Y"
+},
+{
+"id": 82,
+"keyword": "불법도박",
+"use_yn": "Y"
+},
+{
+"id": 83,
+"keyword": "사설도박",
+"use_yn": "Y"
+},
+{
+"id": 84,
+"keyword": "온라인도박",
+"use_yn": "Y"
+},
+{
+"id": 85,
+"keyword": "도박사이트",
+"use_yn": "Y"
+},
+{
+"id": 86,
+"keyword": "토토사설",
+"use_yn": "Y"
+},
+{
+"id": 87,
+"keyword": "도박환전",
+"use_yn": "Y"
+},
+{
+"id": 88,
+"keyword": "충전",
+"use_yn": "N"
+},
+{
+"id": 89,
+"keyword": "정산",
+"use_yn": "Y"
+},
+{
+"id": 90,
+"keyword": "픽공유",
+"use_yn": "Y"
+},
+{
+"id": 91,
+"keyword": "적중률",
+"use_yn": "Y"
+},
+{
+"id": 92,
+"keyword": "총판모집",
+"use_yn": "Y"
+},
+{
+"id": 93,
+"keyword": "회원모집",
+"use_yn": "Y"
+},
+{
+"id": 94,
+"keyword": "카지노",
+"use_yn": "Y"
+},
+{
+"id": 95,
+"keyword": "실시간카지노",
+"use_yn": "Y"
+},
+{
+"id": 96,
+"keyword": "불법무기",
+"use_yn": "Y"
+},
+{
+"id": 97,
+"keyword": "총기판매",
+"use_yn": "Y"
+},
+{
+"id": 98,
+"keyword": "폭발물",
+"use_yn": "Y"
+},
+{
+"id": 99,
+"keyword": "칼판매불법",
+"use_yn": "Y"
+},
+{
+"id": 100,
+"keyword": "제작문의",
+"use_yn": "Y"
+},
+{
+"id": 101,
+"keyword": "실험용",
+"use_yn": "Y"
+},
+{
+"id": 102,
+"keyword": "부품구매",
+"use_yn": "Y"
+},
+{
+"id": 103,
+"keyword": "사제폭탄",
+"use_yn": "Y"
+},
+{
+"id": 104,
+"keyword": "화약제조",
+"use_yn": "Y"
+},
+{
+"id": 105,
+"keyword": "무기중개",
+"use_yn": "Y"
+},
+{
+"id": 106,
+"keyword": "개인정보판매",
+"use_yn": "Y"
+},
+{
+"id": 107,
+"keyword": "개인정보유출",
+"use_yn": "Y"
+},
+{
+"id": 108,
+"keyword": "계정판매",
+"use_yn": "Y"
+},
+{
+"id": 109,
+"keyword": "계정거래",
+"use_yn": "Y"
+},
+{
+"id": 110,
+"keyword": "아이디판매",
+"use_yn": "Y"
+},
+{
+"id": 111,
+"keyword": "계정탈취",
+"use_yn": "Y"
+},
+{
+"id": 112,
+"keyword": "해킹의뢰",
+"use_yn": "Y"
+},
+{
+"id": 113,
+"keyword": "해킹서비스",
+"use_yn": "Y"
+},
+{
+"id": 114,
+"keyword": "크리덴셜",
+"use_yn": "Y"
+},
+{
+"id": 115,
+"keyword": "대량계정",
+"use_yn": "Y"
+},
+{
+"id": 116,
+"keyword": "자동수집",
+"use_yn": "Y"
+},
+{
+"id": 117,
+"keyword": "DB판매",
+"use_yn": "Y"
+},
+{
+"id": 118,
+"keyword": "텔레",
+"use_yn": "Y"
+},
+{
+"id": 119,
+"keyword": "텔그",
+"use_yn": "Y"
+},
+{
+"id": 120,
+"keyword": "텔레문의",
+"use_yn": "Y"
+},
+{
+"id": 121,
+"keyword": "텔문의",
+"use_yn": "Y"
+},
+{
+"id": 122,
+"keyword": "그룹방",
+"use_yn": "Y"
+},
+{
+"id": 123,
+"keyword": "손대손",
+"use_yn": "Y"
+},
+{
+"id": 124,
+"keyword": "무통",
+"use_yn": "Y"
+},
+{
+"id": 125,
+"keyword": "연식계정",
+"use_yn": "Y"
+},
+{
+"id": 126,
+"keyword": "유령계정",
+"use_yn": "Y"
+},
+{
+"id": 127,
+"keyword": "유령작업",
+"use_yn": "Y"
+},
+{
+"id": 128,
+"keyword": "호스트바",
+"use_yn": "Y"
+},
+{
+"id": 129,
+"keyword": "호스트빠",
+"use_yn": "Y"
+},
+{
+"id": 130,
+"keyword": "남보도",
+"use_yn": "Y"
+},
+{
+"id": 131,
+"keyword": "정빠",
+"use_yn": "Y"
+},
+{
+"id": 132,
+"keyword": "티씨",
+"use_yn": "Y"
+},
+{
+"id": 133,
+"keyword": "꽁비",
+"use_yn": "Y"
+},
+{
+"id": 134,
+"keyword": "깔릉",
+"use_yn": "Y"
+},
+{
+"id": 135,
+"keyword": "스웨디시",
+"use_yn": "Y"
+},
+{
+"id": 136,
+"keyword": "건마",
+"use_yn": "Y"
+}
+]
+}

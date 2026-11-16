@@ -1,0 +1,13 @@
+.venv/
+확장모듈_목록.txt
+work/
+out/
+dist/
+config.ini
+__pycache__/
+*.pyc
+.pytest_cache/
+.superpowers/
+자료/
+*데이터목록*
+*컬럼확인용*
