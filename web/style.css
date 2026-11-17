@@ -163,7 +163,7 @@ details.sub summary::marker{color:var(--faint)}
 .welcome h2{margin:0 0 6px;font-size:26px;font-weight:800;line-height:1.35}
 .welcome .lead{color:var(--sub);margin:0 0 22px;font-size:15.5px}
 .welcome .lead b{color:var(--ink)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px}
 .tile{background:var(--fill-3);color:var(--ink);border-radius:20px;padding:22px 20px;text-align:left;white-space:normal;flex-direction:column;align-items:flex-start;justify-content:flex-start;
   gap:8px;line-height:1.5;font-weight:500;transition:background .2s var(--ease),transform .2s var(--ease),box-shadow .2s}
 .tile:hover{background:var(--blue-soft);color:var(--ink);transform:translateY(-2px)}
@@ -453,3 +453,7 @@ h3.sec{font-size:19px;font-weight:800;margin:0 0 12px}
 .next button{background:#fff;color:var(--ink-2);border-radius:99px;font-size:13.5px;padding:7px 14px;box-shadow:var(--shadow)}
 .next button:hover{background:var(--blue);color:#fff}
 @media (max-width:1100px){.flow{grid-template-columns:1fr}.flow li+li::before{display:none}}
+
+/* 파일을 넣기 전: 질문창 대신 시작 버튼에 집중 */
+body.nodata .ask{display:none}
+body.nodata .main{min-height:0}

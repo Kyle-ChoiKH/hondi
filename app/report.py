@@ -64,7 +64,7 @@ def _table(r, cat: Catalog) -> str:
             elif m == "값" and row.get("_applied"):
                 cells.append(f'<td class="n">{row.get(m):.1f}%</td>')
             else:
-                cells.append(f'<td class="n">{html.escape(fmt_value(row.get(m), m if m != "값" else r.step.metric, cat, did))}</td>')
+                cells.append(f'<td class="n">{html.escape(fmt_value(row.get(m), m if m not in ("값", "change_diff") else r.step.metric, cat, did))}</td>')
         body.append("<tr>" + "".join(cells) + "</tr>")
     more = f'<p class="sub">상위 30행만 표시(전체 {len(r.rows)}행)</p>' if len(r.rows) > 30 else ""
     return f'<table><thead><tr>{head}</tr></thead><tbody>{"".join(body)}</tbody></table>{more}'

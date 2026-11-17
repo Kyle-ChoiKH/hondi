@@ -9,7 +9,8 @@ from pathlib import Path
 from .session import Config
 
 DATA = Path(__file__).parent / "data"
-EXTERNAL_URLS = ["https://api.openai.com/v1/chat/completions", "https://open.jejudatahub.net/api/proxy"]
+EXTERNAL_URLS = ["https://api.openai.com/v1/chat/completions", "https://open.jejudatahub.net/api/proxy",
+                 "https://www.jejudatahub.net/data/view/data"]  # 마지막은 미리보기의 원문 링크
 
 
 @dataclass

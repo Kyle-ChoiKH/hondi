@@ -224,9 +224,8 @@ async function renderFocus(ds) {
   if (!ds.length) { S.focusKey = ""; S.focus = { area: "", biz: "" }; return; }
   const key = ds.map((d) => d.id + d.rows).join(",");
   if (key === S.focusKey) return;
-  S.focusKey = key;
   let f = { areas: [], businesses: [] };
-  try { f = await api("/api/focus-options"); } catch (e) { /* 목록 없이도 동작 */ }
+  try { f = await api("/api/focus-options"); S.focusKey = key; } catch (e) { /* 목록 없이도 동작 — 다음 새로고침 때 다시 시도 */ }
   const fill = (sel, list, cur, none) => {
     sel.innerHTML = `<option value="">${none}</option>` + list.map((v) => `<option value="${esc(v)}" ${v === cur ? "selected" : ""}>${esc(v)}</option>`).join("");
     sel.disabled = !list.length; sel.closest("label").classList.toggle("hidden", !list.length);
@@ -262,6 +261,7 @@ function renderComposerCards() {
 }
 function renderWelcome() {
   const st = S.state, w = $("#welcome");
+  document.body.classList.toggle("nodata", !st.datasets.length);  // 파일을 넣기 전에는 질문창을 숨겨 첫 화면을 단순하게
   if ((st.results.length || $$(".turn").length) && !S.explore) { w.classList.add("hidden"); return; }
   w.classList.remove("hidden");
   if (!st.datasets.length) {
@@ -436,9 +436,10 @@ function progress(box, labels) {
   return { done() { clearInterval(timer); lis.forEach((l) => (l.className = "ok")); }, fail() { clearInterval(timer); lis[i].className = "fail"; } };
 }
 function askCard(id) {
+  if (S.cardBusy) return;  // 두 번 눌러도 한 번만(관심 조건이 있으면 바로 실행되므로)
   const c = S.cards.find((x) => x.id === id);
-  S.asked.add(id);
-  makePlan({ card: id }, c ? cardParts(c.label)[0] : "질문 카드", "질문 카드");
+  S.asked.add(id); S.explore = false; S.cardBusy = true;
+  makePlan({ card: id }, c ? cardParts(c.label)[0] : "질문 카드", "질문 카드").finally(() => { S.cardBusy = false; });
 }
 $("#cards").addEventListener("click", (e) => { const b = e.target.closest("[data-card]"); if (b && !b.disabled) askCard(b.dataset.card); });
 function autoGrow() { const q = $("#question"); q.style.height = "auto"; q.style.height = Math.min(160, q.scrollHeight + 2) + "px"; }
@@ -469,11 +470,11 @@ async function makePlan(body, text, sub) {
     <div class="row actions"><button class="primary btn-run">${icon("pc")}이대로 실행</button><button class="ghost cancel">취소</button></div>`;
   paintIcons(m);
   $$(".need", box).forEach(bindNeed);
-  const filled = autoFill(box);
+  const filled = body.card ? autoFill(box) : false;  // 말로 물은 질문은 관심 조건으로 몰래 채우지 않는다(질문 속 지역과 다를 수 있음)
   $(".cancel", box).onclick = () => { $(".actions", box).outerHTML = '<p class="muted" style="font-size:13px">취소했습니다.</p>'; };
   $(".btn-run", box).onclick = () => runPlan(turn, box, d.plan, d.needs);
   m.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  if (d.plan.source === "card" && filled && (d.needs.length ? focusText() : true)) {  // 질문 카드는 고를 값이 다 채워지면 바로 실행
+  if (body.card && d.plan.source === "card" && filled && (d.needs.length ? focusText() : true)) {  // 질문 카드는 고를 값이 다 채워지면 바로 실행
     $(".actions", box).insertAdjacentHTML("beforebegin", `<div class="notes">${d.needs.length ? `관심 조건 <b>${esc(focusText())}</b>으로 채워 바로 계산해요.` : "고를 값이 없어 바로 계산해요."}</div>`);
     runPlan(turn, box, d.plan, d.needs);
   }
@@ -834,7 +835,7 @@ $("#btnEnd").onclick = () => {
     const d = await api("/api/session/end", {});
     closeModal();
     S.results.clear(); S.unselected.clear(); S.removing.clear(); S.order = []; S.prepDone = S.reportDone = S.formDone = false;
-    S.focus = { area: "", biz: "" }; S.focusKey = ""; S.asked.clear(); S.explore = false;
+    S.focus = { area: "", biz: "" }; S.focusKey = ""; S.asked.clear(); S.explore = false; S.recent = {};
     $("#feed").innerHTML = "";
     ["#prepOut", "#reportOut", "#formOut", "#scanOut", "#hubOut", "#uploadOut"].forEach((s) => ($(s).innerHTML = ""));
     toast(`파일 ${d.ended.deleted}개를 지웠습니다. 수고하셨습니다!`, "ok"); refresh();

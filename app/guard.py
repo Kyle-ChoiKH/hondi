@@ -15,7 +15,7 @@ from .tools import is_applied, run_step
 LIMIT = 10
 DERIVED = ("diff_pct", "change_diff", "contrib_pct")
 FINAL_NOTE = "최종 반출 여부는 센터 심사로 결정됩니다."
-LIGHT_TEXT = {"green": "충족 예상", "yellow": "고치면 가능", "red": "원본·10 미만 포함"}
+LIGHT_TEXT = {"green": "충족 예상", "yellow": "고치면 가능", "red": "그대로는 불가"}
 
 
 def cell_count(row: dict, m: str):

@@ -20,7 +20,7 @@ def fmt_value(v, col: str, cat: Catalog = None, did: str = "") -> str:
         role = c["role"] if c else ""
     if col.endswith("_pct"):
         return f"{v:,.1f}%"
-    if role == "amount" or col in ("change_diff",) and cat and cat.column(did, "use_amt"):
+    if role == "amount":
         # 금액은 원 단위 그대로(게시판 답변 2026-11-15: 단위를 줄여 '3.2'처럼 쓰지 않기)
         return f"{v:,.0f}원"
     if isinstance(v, float):
@@ -49,7 +49,7 @@ def narrate(result: Result, cat: Catalog) -> list:
     if t == "trend":
         m = result.measures[0]
         vis = _visible(result, m)
-        if len(vis) >= 2:
+        if len(vis) >= 2 and len(result.dims) == 1:
             (_, a), (_, b) = vis[0], vis[-1]
             d0 = result.dims[0]
             if a[m]:
@@ -96,9 +96,9 @@ def narrate(result: Result, cat: Catalog) -> list:
         if vis:
             up = max(vis, key=lambda x: x[1]["change_diff"])[1]
             dn = min(vis, key=lambda x: x[1]["change_diff"])[1]
-            out.append(f"가장 크게 늘어난 쪽은 '{_lab(up, result.dims)}'({fmt_value(up['change_diff'], 'change_diff', cat, did)})입니다.")
+            out.append(f"가장 크게 늘어난 쪽은 '{_lab(up, result.dims)}'({fmt_value(up['change_diff'], result.step.metric, cat, did)})입니다.")
             if dn["change_diff"] < 0:
-                out.append(f"가장 크게 줄어든 쪽은 '{_lab(dn, result.dims)}'({fmt_value(dn['change_diff'], 'change_diff', cat, did)})입니다.")
+                out.append(f"가장 크게 줄어든 쪽은 '{_lab(dn, result.dims)}'({fmt_value(dn['change_diff'], result.step.metric, cat, did)})입니다.")
     elif t == "profile":
         vis = _visible(result, "값")
         if vis:
@@ -149,8 +149,7 @@ def won_friendly(v) -> str:
 
 def _amount(v, m: str, cat: Catalog, did: str) -> str:
     c = cat.column(did, m.removesuffix("_a").removesuffix("_b")) if cat and did else None
-    return won_friendly(v) if (c and c["role"] == "amount") or (m == "change_diff" and cat.column(did, "use_amt")) \
-        else fmt_value(v, m, cat, did)
+    return won_friendly(v) if c and c["role"] == "amount" else fmt_value(v, m, cat, did)
 
 
 def _unit(cat: Catalog, did: str, metric: str) -> str:
@@ -166,6 +165,13 @@ def _q(r: dict, dims: list) -> str:
     return "'" + _lab(r, dims) + "'"
 
 
+def _any_masked(result: Result, m: str) -> bool:
+    return any(mm == m for _, mm in result.masked)
+
+
+HIDDEN = "가린 칸을 빼고 보면 "  # 가린 칸이 더 클 수 있으니 '가장'이라고 단정하지 않는다
+
+
 def headline(result: Result, cat: Catalog) -> str:
     did, t = result.step.dataset, result.step.tool
     mlabel = cat.label(did, result.step.metric)
@@ -177,7 +183,8 @@ def headline(result: Result, cat: Catalog) -> str:
         if not vis:
             return ""
         d0 = result.dims[0] if result.dims else ""
-        if d0 in ("base_year_month", "quarter", "year", "base_date") and len(vis) >= 2 and vis[0][1][m]:
+        if len(result.dims) == 1 and d0 in ("base_year_month", "quarter", "year", "base_date") and len(vis) >= 2 \
+                and vis[0][1][m]:  # 기준이 둘 이상이면 처음·끝 행이 서로 다른 계열이라 비교하지 않는다
             a, b = vis[0][1], vis[-1][1]
             pct = (b[m] - a[m]) / a[m] * 100
             if abs(pct) < 1:
@@ -185,13 +192,16 @@ def headline(result: Result, cat: Catalog) -> str:
             return (f"{_ym(a[d0])}보다 {_ym(b[d0])}에 {j(mlabel, '이')} {abs(pct):,.0f}% "
                     f"{'늘었어요' if pct > 0 else '줄었어요'}.")
         top = max(vis, key=lambda x: x[1][m])[1]
-        return f"{j(mlabel, '이')} 가장 많은 때는 {j(_q(top, result.dims), '예요')} ({_amount(top[m], m, cat, did)})."
+        pre = HIDDEN if _any_masked(result, m) else ""
+        return f"{pre}{j(mlabel, '이')} 가장 많은 때는 {j(_q(top, result.dims), '예요')} ({_amount(top[m], m, cat, did)})."
     if t == "share":
         m = result.measures[0]
         vis = sorted(_visible(result, m), key=lambda x: -x[1][m])
         if not vis:
             return ""
         a = vis[0][1]
+        if _any_masked(result, m):
+            return f"{HIDDEN}{j(_q(a, result.dims), '이')} 가장 큰 몫이에요 ({a[m]:.1f}%)."
         unit = _unit(cat, did, result.step.metric)
         k = round(a[m] / 10)
         if unit and k >= 10:
@@ -206,6 +216,8 @@ def headline(result: Result, cat: Catalog) -> str:
         if not vis:
             return ""
         first = vis[0]
+        if first.get("rank") != 1:
+            return f"{HIDDEN}{mlabel} {first.get('rank')}위인 {j(_q(first, result.dims), '이')} 가장 높아요."
         s = f"{mlabel} 1위는 {j(_q(first, result.dims), '예요')}"
         second = next((r for r in vis[1:] if r.get("rank") == 2), None)
         if m and second and second.get(m):
@@ -222,8 +234,9 @@ def headline(result: Result, cat: Catalog) -> str:
                 f"{'늘었어요' if r['yoy_pct'] >= 0 else '줄었어요'}.")
     if t == "compare":
         ma, mb = result.measures[0], result.measures[1]
-        sa = sum(r[ma] for _, r in _visible(result, ma))
-        sb = sum(r[mb] for _, r in _visible(result, mb))
+        both = [r for i, r in enumerate(result.rows) if (i, ma) not in result.masked and (i, mb) not in result.masked
+                and r.get(ma) is not None and r.get(mb) is not None]  # 양쪽 모두 보이는 행끼리만 비교
+        sa, sb = sum(r[ma] for r in both), sum(r[mb] for r in both)
         fa = ", ".join(str(v) for v in result.step.filters.values())
         fb = ", ".join(str(v) for v in (result.step.options.get("filters_b") or {}).values())
         if not sb or not sa:
@@ -238,13 +251,15 @@ def headline(result: Result, cat: Catalog) -> str:
         up = max(vis, key=lambda x: x[1]["change_diff"])[1]
         dn = min(vis, key=lambda x: x[1]["change_diff"])[1]
         if up["change_diff"] > 0:
-            return f"가장 크게 늘어난 건 {j(_q(up, result.dims), '예요')} (+{_amount(up['change_diff'], 'change_diff', cat, did)})."
-        return f"가장 크게 줄어든 건 {j(_q(dn, result.dims), '예요')} ({_amount(dn['change_diff'], 'change_diff', cat, did)})."
+            return f"가장 크게 늘어난 건 {j(_q(up, result.dims), '예요')} (+{_amount(up['change_diff'], result.step.metric, cat, did)})."
+        return f"가장 크게 줄어든 건 {j(_q(dn, result.dims), '예요')} ({_amount(dn['change_diff'], result.step.metric, cat, did)})."
     if t == "profile":
         vis = [r for _, r in _visible(result, "값")]
         biz = [r for r in vis if str(r["지표"]).startswith("주요 업종")]
         area = result.step.options.get("area")
-        if biz:
+        top_hidden = any((i, "값") in result.masked for i, r in enumerate(result.rows)
+                         if str(r.get("지표", "")).startswith("주요 업종"))
+        if biz and not top_hidden:
             top = biz[0]
             name = top["지표"].split(": ", 1)[1].replace(" 비중(%)", "")
             return f"{area}에서 가장 큰 업종은 {j(chr(39) + name + chr(39), '예요')}. 전체의 {top['값']:.1f}%를 차지해요."

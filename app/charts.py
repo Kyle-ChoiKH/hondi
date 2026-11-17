@@ -63,6 +63,7 @@ def _pick_measure(result: Result) -> str:
 
 def render(result: Result, cat: Catalog, path: Path, numbers: bool = True, demo: bool = False) -> Path:
     path = Path(path)
+    _m = lambda x: result.step.metric if x == "change_diff" else x  # 증감값의 단위는 원래 지표(금액이면 원, 건수면 건)
     path.parent.mkdir(parents=True, exist_ok=True)
     numbers = numbers and "no_numbers" not in result.notes
     did = result.step.dataset
@@ -105,7 +106,7 @@ def render(result: Result, cat: Catalog, path: Path, numbers: bool = True, demo:
                 if (i, m) in result.masked:
                     ax.text(b.get_x() + w / 2, 0, "가림", ha="center", va="bottom", fontsize=8, color=SUB)
                 elif numbers:
-                    ax.text(b.get_x() + w / 2, b.get_height(), fmt_value(vals[i], m, cat, did), ha="center",
+                    ax.text(b.get_x() + w / 2, b.get_height(), fmt_value(vals[i], _m(m), cat, did), ha="center",
                             va="bottom", fontsize=7, color=INK)
         ax.set_xticks(list(x), labels, rotation=30 if len(rows) > 6 else 0, ha="right" if len(rows) > 6 else "center")
         ax.legend(frameon=False)
@@ -130,9 +131,9 @@ def render(result: Result, cat: Catalog, path: Path, numbers: bool = True, demo:
                     ax.axvspan(x - 0.3, x + 0.3, color=HATCH, alpha=0.4)
                     ax.text(x, ax.get_ylim()[0], "가림", ha="center", va="bottom", fontsize=8, color=SUB)
                 elif numbers:
-                    ax.annotate(fmt_value(v, m, cat, did), (x, v), textcoords="offset points", xytext=(0, 7),
+                    ax.annotate(fmt_value(v, _m(m), cat, did), (x, v), textcoords="offset points", xytext=(0, 7),
                                 ha="center", fontsize=7, color=INK)
-            ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _: fmt_value(y, m, cat, did)))
+            ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _: fmt_value(y, _m(m), cat, did)))
             step = max(1, len(xs) // 12)
             ax.set_xticks(xs[::step], labels[::step], rotation=30 if len(xs) > 8 else 0)
             if m.endswith("_pct"):
@@ -156,10 +157,10 @@ def render(result: Result, cat: Catalog, path: Path, numbers: bool = True, demo:
                     ax.barh(k, span * 0.04, color="none", edgecolor=HATCH, hatch="///", height=0.6)
                     ax.text(span * 0.05, k, "10 미만(가림)", va="center", fontsize=9, color=SUB)
                 elif numbers:
-                    ax.text(b.get_width() + span * 0.01, k, fmt_value(vals[k], m, cat, did), va="center",
+                    ax.text(b.get_width() + span * 0.01, k, fmt_value(vals[k], _m(m), cat, did), va="center",
                             fontsize=9, color=INK)
             ax.set_yticks(range(len(order)), labels)
-            ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: fmt_value(v, m, cat, did)))
+            ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: fmt_value(v, _m(m), cat, did)))
             if not numbers:
                 ax.set_xticks([])
             ax.set_xlim(min(0, min(vals) * 1.15), span * 1.18)

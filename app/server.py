@@ -126,7 +126,7 @@ class App:
                 elif m == "값" and row.get("_applied"):
                     cells.append(f"{row.get(m):.1f}%")
                 else:
-                    cells.append(fmt_value(row.get(m), m if m != "값" else r.step.metric, self.cat, did))
+                    cells.append(fmt_value(row.get(m), m if m not in ("값", "change_diff") else r.step.metric, self.cat, did))
             rows.append(cells)
         info = self.results[rid]
         return {"id": rid, "title": r.title, "dataset": self.cat.name(did), "png": out_url(info['png'].name),

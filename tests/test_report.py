@@ -113,3 +113,13 @@ def test_check_memo_asks_to_link_conditions_to_plan(small_ws, cat):
     html = check_memo(rs, ass, cat, purpose="사업계획서", note="애월읍 국수집 창업")
     assert "조건과 활용 계획" in html and "애월읍" in html and "☐" in html
     assert "데이터별 활용 내용" in html and cat.name(rs[0].step.dataset) in html
+
+
+def test_check_memo_usage_lists_leave_out_red_results(small_ws, cat):
+    import dataclasses
+    rs, ass = results(small_ws, cat)
+    red = dataclasses.replace(rs[0], title="빨강제목결과")
+    ass2 = [dataclasses.replace(ass[0], light="red")] + list(ass)
+    html = check_memo([red] + list(rs), ass2, cat)
+    use_part = html.split("데이터별 활용 내용", 1)[1]
+    assert "빨강제목결과" not in use_part

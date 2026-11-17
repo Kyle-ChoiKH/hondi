@@ -102,9 +102,10 @@ def check_memo(results: list, assessments: list, catalog: Catalog, purpose: str 
     use = (note.strip() or USE.get(purpose, USE["자유"])) if (purpose or note) else "(반출 신청서에 적은 활용 목적)"
     datasets = list(dict.fromkeys(catalog.name(r.step.dataset) for r in results))
     # 게시판 답변(11/15): 조건이 활용계획과 관련 있는지, 여러 데이터면 데이터별 활용 사유까지 심사한다
-    conds = list(dict.fromkeys(c for r in results for c in [_conditions(r, catalog)] if c and c not in ("-", "조건 없음")))
+    sent = [r for r, a in zip(results, assessments) if a.light != "red"]  # 빨강은 신청서에서 빠지므로 활용 내용에도 넣지 않는다
+    conds = list(dict.fromkeys(c for r in sent for c in [_conditions(r, catalog)] if c and c not in ("-", "조건 없음")))
     by_ds = {}
-    for r in results:
+    for r in sent:
         by_ds.setdefault(catalog.name(r.step.dataset), []).append(r.title)
     plan = ("<h3>조건과 활용 계획의 관계(신청 전에 확인)</h3><ul>"
             + "".join(f"<li>☐ {html.escape(c)} — 이 조건이 활용 목적에 필요한 이유를 신청서 설명 칸에 적었습니다.</li>" for c in conds)

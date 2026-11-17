@@ -119,7 +119,8 @@ def test_narrate_ai_never_sends_masked_cells(small_ws, cat, tmp_path):
 def test_amounts_are_shown_in_won(cat):
     from app.narrate import fmt_value
     assert fmt_value(320000000, "use_amt", cat, "1-08") == "320,000,000원"
-    assert fmt_value(-72110000, "change_diff", cat, "1-08") == "-72,110,000원"
+    assert fmt_value(-72110000, "use_amt", cat, "1-08") == "-72,110,000원"  # 증감값은 원래 지표(금액)로 표시
+    assert fmt_value(120, "use_cnt", cat, "1-08") == "120"  # 건수 증감에는 원을 붙이지 않음
 
 
 def test_charts_use_bundled_pretendard_font():
@@ -171,3 +172,57 @@ def test_howto_explains_chart_for_every_tool():
     from app.narrate import HOWTO
     from app.tools import TOOLS
     assert set(TOOLS) <= set(HOWTO) and all("요" in v for v in HOWTO.values())
+
+
+def _res(tool, metric, dims, measures, rows, masked=(), filters=None, options=None, did="1-08"):
+    from app.model import Result
+    return Result("t", "t", Step(tool, did, metric, dims, filters or {}, options or {}), dims, measures, rows,
+                  "simple", ("202507", "202508"), set(masked))
+
+
+def test_headline_rank_does_not_crown_second_when_first_is_masked(cat):
+    from app.narrate import headline
+    r = _res("rank", "use_amt", ["biz_nm"], ["rank", "use_amt"],
+             [{"biz_nm": "기타", "rank": 1, "use_amt": 900}, {"biz_nm": "한식", "rank": 2, "use_amt": 500},
+              {"biz_nm": "카페", "rank": 3, "use_amt": 100}], masked={(0, "rank"), (0, "use_amt")})
+    h = headline(r, cat)
+    assert "1위는 '한식'" not in h and "'한식'" in h and "가린 칸" in h
+
+
+def test_headline_share_and_profile_say_masked_top_may_be_hidden(cat):
+    from app.narrate import headline
+    r = _res("share", "use_amt", ["biz_nm"], ["share_pct"],
+             [{"biz_nm": "기타", "share_pct": 60.0}, {"biz_nm": "한식", "share_pct": 25.0}, {"biz_nm": "카페", "share_pct": 15.0}],
+             masked={(0, "share_pct"), (2, "share_pct")})
+    h = headline(r, cat)
+    assert "가장 큰 몫은 '한식'" not in h and "가린 칸" in h
+    p = _res("profile", "use_amt", [], ["값"],
+             [{"지표": "주요 업종: 기타 비중(%)", "값": 50.0}, {"지표": "주요 업종: 한식 비중(%)", "값": 30.0}],
+             masked={(0, "값")}, options={"area": "애월읍"})
+    assert "가장 큰 업종은 '한식'" not in headline(p, cat)
+
+
+def test_headline_trend_with_two_dims_does_not_mix_series(cat):
+    from app.narrate import headline
+    r = _res("trend", "use_amt", ["base_year_month", "bjd"], ["use_amt"],
+             [{"base_year_month": "202506", "bjd": "노형동", "use_amt": 2000}, {"base_year_month": "202506", "bjd": "애월읍", "use_amt": 14100},
+              {"base_year_month": "202508", "bjd": "노형동", "use_amt": 2340}, {"base_year_month": "202508", "bjd": "애월읍", "use_amt": 14100}])
+    h = headline(r, cat)
+    assert "605%" not in h and "%" not in h and "애월읍" in h
+
+
+def test_headline_contribution_of_counts_is_not_in_won(cat):
+    from app.narrate import headline
+    r = _res("contribution", "use_cnt", ["biz_nm"], ["change_diff"],
+             [{"biz_nm": "카페", "change_diff": 120}, {"biz_nm": "한식", "change_diff": -30}])
+    h = headline(r, cat)
+    assert "원" not in h and "120" in h
+
+
+def test_headline_compare_uses_rows_visible_on_both_sides(cat):
+    from app.narrate import headline
+    r = _res("compare", "use_amt", ["base_year_month"], ["use_amt_a", "use_amt_b"],
+             [{"base_year_month": "202507", "use_amt_a": 100, "use_amt_b": 100},
+              {"base_year_month": "202508", "use_amt_a": 100, "use_amt_b": 5000}],
+             masked={(1, "use_amt_a")}, filters={"bjd": "애월읍"}, options={"filters_b": {"bjd": "노형동"}})
+    assert "배 많아요" not in headline(r, cat)  # 둘 다 보이는 202507만 비교 → 같음
